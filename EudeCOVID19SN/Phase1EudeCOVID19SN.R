@@ -1,25 +1,25 @@
 #####################################################
-# Projet : Analyse COVID-19 au Sénégal: partie 1    #
+# Projet : Analyse COVID-19 au SÃ©nÃ©gal: partie 1    #
 # Auteur : Ousmane Sy Bodian,                       #
-# Profil : Ingénieur statisticien, Data scientist   # 
-# Date début : 13/06/2020                           #
+# Profil : IngÃ©nieur statisticien, Data scientist   # 
+# Date dÃ©but : 13/06/2020                           #
 # Date fin :   20/07/2020                           #
 #####################################################
 
 
 #----------------------- Libreries requises dans ce projet ----------------------
-library(fpp2)        # pour la prévision
-library(tidyverse)   # pour faire des requête sur la data
+library(fpp2)        # pour la prÃ©vision
+library(tidyverse)   # pour faire des requÃªte sur la data
 library(plotly)      # Graphe interractive (visualisation)
 library(lubridate)  # gestion format date
 library(scales)    # pour changer l'echelle 'ymd' en 'jj mm'
 
 
-#---------------------- Importation de la base de données -----------------------
-# La base de données est mis à jours tous jours
-# avec de nouvelles observations. A télécharger (Source GitHub).
+#---------------------- Importation de la base de donnÃ©es -----------------------
+# La base de donnÃ©es est mis Ã  jours tous jours
+# avec de nouvelles observations. A tÃ©lÃ©charger (Source GitHub).
 # Source GitHub: https://github.com/senegalouvert/COVID-19
-# Données recueillies à la date : 06-13-2020
+# DonnÃ©es recueillies Ã  la date : 06-13-2020
 
 covid19_SN <- read.csv("confirmes.csv", sep = ",", header = T)
 
@@ -34,12 +34,12 @@ str(covid19_SN)
 tail(covid19_SN$date)
 
 # A priori, R ne reconnait pas la structure des dates (la variable temporelle)
-# pour une série chronologique. Donc,les lignes suivantes vont nous
+# pour une sÃ©rie chronologique. Donc,les lignes suivantes vont nous
 # permettre de lui faire comprendre que la variable 'date' est ici notre
 # variable temporelle.
 
 # Mettre le format classe 'date' avec 'as.POSIXct()' = classe 'date'
-# puis ordonner la base de données dans l'ordre croissant 
+# puis ordonner la base de donnÃ©es dans l'ordre croissant 
 covid19_SN <- covid19_SN %>%
   mutate(date = as.POSIXct(date)) %>%
   arrange(date) 
@@ -60,7 +60,7 @@ print(tab)
 freq_cas <- round(prop.table(tab), 4)*100
 print(freq_cas)
 
-# Découpage en classes
+# DÃ©coupage en classes
 classe <- cut(covid19_SN$cas, breaks = seq(0, max(covid19_SN$cas) + 25, by = 25), 
               include.lowest = T)
 print(classe)
@@ -69,40 +69,40 @@ print(classe)
 freq_classe <- round(prop.table(table(classe)), 4)*100
 print(freq_classe)
 
-#--------------------- Etude de Corrélation entre les variables ----------------------
+#--------------------- Etude de CorrÃ©lation entre les variables ----------------------
 
 # La commande suivante du package 'GGally' permet de tracer 
-# la matrice de corrélation des variables avec une subtilité
-# qui est ici d'afficher les nuages de points en même temps.
+# la matrice de corrÃ©lation des variables avec une subtilitÃ©
+# qui est ici d'afficher les nuages de points en mÃªme temps.
 GGally::ggpairs(covid19_SN[,c(2, 3, 6, 8, 9, 11)]) +
   theme_minimal()
 
-# Nuages de points: 'Nbre de morts' en fonction des 'guéris' 
+# Nuages de points: 'Nbre de morts' en fonction des 'guÃ©ris' 
 # (avec 'geom-smooth(method = "lm")')
 ggplot(covid19_SN, aes(x = gueri, y = mort)) +
   geom_smooth(method = "lm") +
   geom_point() +
-  ggtitle("Evolution du nbre de personnes décédées du COVID-19\n en fonction du nbre de celles guéries") +
-  xlab("Nbre cummulé de personnes guéries par jour") +
-  ylab("Nbre de personnes décédées") +
+  ggtitle("Evolution du nbre de personnes dÃ©cÃ©dÃ©es du COVID-19\n en fonction du nbre de celles guÃ©ries") +
+  xlab("Nbre cummulÃ© de personnes guÃ©ries par jour") +
+  ylab("Nbre de personnes dÃ©cÃ©dÃ©es") +
   theme_minimal()
 
 
 
 
-#-------------------------- Situation de la pandémie dans le pays -----------------------
+#-------------------------- Situation de la pandÃ©mie dans le pays -----------------------
 
 # Dans cette partie, nous allons visualiser deux graphes
 
 
 # Graphe 1 : Evolution quotidienne du nombre de cas (contacts, communautaires et graves)
 
-# Par défaut, le pas de temps utilisé est le mois
-# Pour passer à un pas de temps plus fin, par semaine, 
-# il est nécessaire de créer la séquence de date correspondante, comme ceci :
+# Par dÃ©faut, le pas de temps utilisÃ© est le mois
+# Pour passer Ã  un pas de temps plus fin, par semaine, 
+# il est nÃ©cessaire de crÃ©er la sÃ©quence de date correspondante, comme ceci :
 datebreaks <- seq(as.Date("2020-03-02"), as.Date("2020-06-13"), by = "1 week")
 
-# Nous pouvons alors préciser ce pas de temps, à l'aide de l'argument 'breaks' 
+# Nous pouvons alors prÃ©ciser ce pas de temps, Ã  l'aide de l'argument 'breaks' 
 # de la fonction 'scale_x_date()', comme ceci :
 
 # Graphe
@@ -112,7 +112,7 @@ ggplot(covid19 <- covid19_SN %>%
   geom_line(aes(x = date, y = cas, col = "cas contacts")) +
   geom_line(aes(x = date, y = communautaire, col = "cas communautaires")) +
   geom_line(aes(x = date, y = grave, col = "cas graves")) +
-  geom_line(aes(x = date, y = tests /100, col = "Tests réalisés (en centaine)")) +
+  geom_line(aes(x = date, y = tests /100, col = "Tests rÃ©alisÃ©s (en centaine)")) +
   geom_vline(xintercept = covid19$date[which(covid19$date == "2020-03-23")],
              col = "red", size = 1, linetype = 2) +
   geom_vline(xintercept = covid19$date[which(covid19$date == "2020-05-11")],
@@ -121,7 +121,7 @@ ggplot(covid19 <- covid19_SN %>%
              col = "cornflowerblue", size = .8, linetype = 2) +
   scale_x_date(breaks = datebreaks) +
   guides(colour = guide_legend("")) +
-  ggtitle("Nombre quotidien de cas du COVID-19 au Sénégal\n du 02 Mars au 13 Juin 2020") +
+  ggtitle("Nombre quotidien de cas du COVID-19 au SÃ©nÃ©gal\n du 02 Mars au 13 Juin 2020") +
   xlab("") +
   ylab("Nbre de cas") +
   theme_minimal() +
@@ -129,35 +129,35 @@ ggplot(covid19 <- covid19_SN %>%
         legend.position = "bottom")
 
 # En effet,le graphe ci-dessus prend en compte des dates importantes correspondant 
-# aux différentes mesures prises par les autorités dans le cadre de la lutte contre
-# pandémie.
+# aux diffÃ©rentes mesures prises par les autoritÃ©s dans le cadre de la lutte contre
+# pandÃ©mie.
 
 # Dates des mesures prises par le PR Macky Sall
 
 #***** Lundi 16 Mars 2020 : arret des enseignements sur tout le territoire
-# plus de pèlerinage et renforcement des controles sur toutes les frontières 
+# plus de pÃ¨lerinage et renforcement des controles sur toutes les frontiÃ¨res 
 # 18 Mars 2020 : suspension de l'exploitation des vols et navigations maritimes
-# 19 Mars : Fermeture des mosqués 
-#**** 23 Mars 2020 : Déclaration de l'état d'urgence 'COUVRE FEU' de 20h à 06h.
+# 19 Mars : Fermeture des mosquÃ©s 
+#**** 23 Mars 2020 : DÃ©claration de l'Ã©tat d'urgence 'COUVRE FEU' de 20h Ã  06h.
 
-#***** 11 Mai 2020 : Plus de deux mois après le 23 Mars 'COUVRE FEU'
-#***** Assouplissement des conditions de l'état d'urgence désormais 21h à 06h
-# Réouverture des marchés et des lieux de cultes.
-# Ces mesures ont été prises suites à plusieurs revendications du peuple et 
+#***** 11 Mai 2020 : Plus de deux mois aprÃ¨s le 23 Mars 'COUVRE FEU'
+#***** Assouplissement des conditions de l'Ã©tat d'urgence dÃ©sormais 21h Ã  06h
+# RÃ©ouverture des marchÃ©s et des lieux de cultes.
+# Ces mesures ont Ã©tÃ© prises suites Ã  plusieurs revendications du peuple et 
 # de la pression des chefs religieux
 
 #***** 5 Juin : relachement des transports interurbains 
-# après plusieurs manifestations dans le pays
+# aprÃ¨s plusieurs manifestations dans le pays
 
 
-# Graphe 2 : Distribution du nombre cumulé des cas (total, gueri, traitement)  
+# Graphe 2 : Distribution du nombre cumulÃ© des cas (total, gueri, traitement)  
 ggplot(covid19 <- covid19_SN %>%
          mutate(date = date(date)) %>%
          mutate(traitement = total - gueri)) +
   geom_line(aes(x = date, y = total, col = "Nbre total atteint")) +
-  geom_line(aes(x = date, y = gueri, col = "Nbre total guéri")) +
+  geom_line(aes(x = date, y = gueri, col = "Nbre total guÃ©ri")) +
   geom_line(aes(x = date, y = traitement, col = "Nbre total sous traitement")) +
-  geom_line(aes(x = date, y = mort, col = "Nbre total décédé")) +
+  geom_line(aes(x = date, y = mort, col = "Nbre total dÃ©cÃ©dÃ©")) +
   geom_vline(xintercept = covid19$date[which(covid19$date == "2020-04-10")],
              col = "brown", size = .8, linetype = 2) +
   geom_vline(xintercept = covid19$date[which(covid19$date == "2020-04-24")],
@@ -166,9 +166,9 @@ ggplot(covid19 <- covid19_SN %>%
              col = "skyblue", size = .8, linetype = 2) +
   scale_x_date(breaks = datebreaks) +
   guides(colour = guide_legend("")) +
-  ggtitle("Nombre cumulé des cas du COVID-19 au Sénégal\n du 02 Mars au 13 Juin 2020") +
+  ggtitle("Nombre cumulÃ© des cas du COVID-19 au SÃ©nÃ©gal\n du 02 Mars au 13 Juin 2020") +
   xlab("") +
-  ylab("Nbre cumulé") +
+  ylab("Nbre cumulÃ©") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle=45, hjust=1), 
         legend.position = "bottom")
@@ -177,40 +177,40 @@ ggplot(covid19 <- covid19_SN %>%
 
 
 
-#------------------------------- Création des séries chronologiques -----------------------------
+#------------------------------- CrÃ©ation de la sÃ©rie chronologique -----------------------------
 
-# Notons qu'entre temps, la base de données a été mis à jour désormais 
+# Notons qu'entre temps, la base de donnÃ©es a Ã©tÃ© mis Ã  jour dÃ©sormais 
 # elle part de 2020-03-02 au 2020-06-28
 
-# Importons la nouvelle base de données
+# Importons la nouvelle base de donnÃ©es
 covid19_SN <- read.csv("confirmes28juin.csv", sep = ",", header = T)
 
 # Mettre la variable date au format : classe 'date' avec 'as.POSIXct()' = classe 'date'
-# puis ordonner la base de données dans l'ordre croissant 
+# puis ordonner la base de donnÃ©es dans l'ordre croissant 
 covid19_SN <- covid19_SN %>%
   mutate(date = as.POSIXct(date)) %>%
   arrange(date)
 
-# Vérification de la classe des variables
+# VÃ©rification de la classe des variables
 str(covid19_SN)
 
 
 #**** Constat :
-# Notons que notre série présente des données quotidiennnes du 2020-03-02 au 2020-06-02
-# Donc on choisit de créer deux séries de fréquence 7 jours (par semaine)
-# Dans le but de mieux voir les tendances et saisonnalités
+# Notons que notre sÃ©rie prÃ©sente des donnÃ©es quotidiennnes du 2020-03-02 au 2020-06-02
+# Donc on choisit de crÃ©er deux sÃ©ries de frÃ©quence 7 jours (par semaine)
+# Dans le but de mieux voir les tendances et saisonnalitÃ©s
 
-#--- Avant la série chronologique,
+#--- Avant la sÃ©rie chronologique,
 
-# Création des indices de dates à frequence weekly (hebdomadaire) 
+# CrÃ©ation des indices de dates Ã  frequence weekly (hebdomadaire) 
 inds <- seq(as.Date("2020-03-02"), as.Date("2020-06-28"), by = "week")
 
-# Début des date: Création du début des dates 
-# (il s'agit de notre première semaine d'observation) 
+# DÃ©but des date: CrÃ©ation du dÃ©but des dates 
+# (il s'agit de notre premiÃ¨re semaine d'observation) 
 begin <- as.numeric(format(inds[1], "%W"))
 
 
-#************** Création propre de la Série chronologique ('Nbre de cas confirmés')
+#************** CrÃ©ation propre de la SÃ©rie chronologique ('Nbre de cas confirmÃ©s')
 #************************* de frequence hebdomadaire (weekly) *********************
 ts_covid19 <- ts(covid19_SN[ ,3], start = begin, frequency = 7)
 head(force(ts_covid19), 10)
@@ -219,29 +219,29 @@ head(force(ts_covid19), 10)
 
 
 
-#----------------------------------- Etude tendancielle et saisonnière ---------------------------
+#----------------------------------- Etude tendancielle et saisonniÃ¨re ---------------------------
 
 # Visualisation des chronogrammes avec 'autoplot()'
 
 #----------------- Etude des tendances
 autoplot(ts_covid19, col = "brown") +
-  ggtitle("COVID-19 : Nombre de cas confirmés au Sénégal\n du 02 Mars au 28 Juin 2020") +
+  ggtitle("COVID-19 : Nombre de cas confirmÃ©s au SÃ©nÃ©gal\n du 02 Mars au 28 Juin 2020") +
   xlab("Semaines") +
-  ylab("Nbre de cas confirmés") +
+  ylab("Nbre de cas confirmÃ©s") +
   theme_minimal()
 
 # Le code suivant permet de rendre interractive le graphe ci dessus.
 g <- autoplot(ts_covid19, col = "brown") +
-  ggtitle("COVID-19 : Nombre de cas confirmés au Sénégal\n du 02 Mars au 28 Juin 2020") +
+  ggtitle("COVID-19 : Nombre de cas confirmÃ©s au SÃ©nÃ©gal\n du 02 Mars au 28 Juin 2020") +
   xlab("Semaines") +
-  ylab("Nbre de cas confirmés") +
+  ylab("Nbre de cas confirmÃ©s") +
   theme_minimal()
 # Visulisation Graphique interractif
 ggplotly(g)
 
 
 
-#------------- Etude de la saisonnalité
+#------------- Etude de la saisonnalitÃ©
 
 # Le premier diagramme saisonnier 
 ggseasonplot(ts_covid19, year.labels = T, year.labels.left = T) +
@@ -249,28 +249,28 @@ ggseasonplot(ts_covid19, year.labels = T, year.labels.left = T) +
   theme_minimal()
 
 
-# Diagramme saisonnier en coordonnées polaires 
+# Diagramme saisonnier en coordonnÃ©es polaires 
 ggseasonplot(ts_covid19, polar = T) +
   guides(colour = guide_legend(title="Weeks")) +
-  ggtitle("Diagramme saisonnier en coordonnées polaires") +
+  ggtitle("Diagramme saisonnier en coordonnÃ©es polaires") +
   theme_minimal()
 
 
-# Diagramme de la sous-série saisonnière
+# Diagramme de la sous-sÃ©rie saisonniÃ¨re
 ggsubseriesplot(ts_covid19) +
   theme_minimal() 
 
 
 
-# Deuxième diagramme de la sous-série saisonnière
+# DeuxiÃ¨me diagramme de la sous-sÃ©rie saisonniÃ¨re
 gglagplot(ts_covid19) +
   theme_minimal()
 
 
-# Corrélogramme ou ACF (interractif)
+# CorrÃ©logramme ou ACF (interractif)
 g2 <- ggAcf(ts_covid19, lag = 35) +
-  xlab("Les décalages") +
-  ggtitle("Corrélogramme") +
+  xlab("Les dÃ©calages") +
+  ggtitle("CorrÃ©logramme") +
   theme_minimal()
 
 ggplotly(g2)
@@ -278,33 +278,33 @@ ggplotly(g2)
 
 
 
-#---------------------------------- Les méthodes de prévision de référence ----------------------------- 
+#---------------------------------- Les mÃ©thodes de prÃ©vision de rÃ©fÃ©rence ----------------------------- 
 
-# Actualisons la base de données qui part de 02-03-2020 à 14-07-2020
+# Actualisons la base de donnÃ©es qui part de 02-03-2020 Ã  14-07-2020
 
-# Importons la nouvelle base de données
+# Importons la nouvelle base de donnÃ©es
 covid19_SN <- read.csv("confirmes_14Juillet.csv", sep = ",", header = T)
 
 # Mettre la variable date au format : classe 'date' avec 'as.POSIXct()' = classe 'date'
-# puis ordonner la base de données dans l'ordre croissant 
+# puis ordonner la base de donnÃ©es dans l'ordre croissant 
 covid19_SN <- covid19_SN %>%
   mutate(date = as.POSIXct(date)) %>%
   arrange(date)
 
-# Il faut recréer à nouveau la série chronologique avec la nouvelle base de données
+# Il faut recrÃ©er Ã  nouveau la sÃ©rie chronologique avec la nouvelle base de donnÃ©es
 
-# Notons que notre série présente des données quotidiennnes du 2020-03-02 au 2020-07-14
-# Donc on choisit de créer deux séries de fréquence 7 jours (par semaine)
-# Dans le but de mieux voir les tendances et saisonnalités
+# Notons que notre sÃ©rie prÃ©sente des donnÃ©es quotidiennnes du 2020-03-02 au 2020-07-14
+# Donc on choisit de crÃ©er deux sÃ©ries de frÃ©quence 7 jours (par semaine)
+# Dans le but de mieux voir les tendances et saisonnalitÃ©s
 
-#*** Série chronologique de frequence hebdomadaire (weekly) ***
-# Création du début des dates (il s'agit de notre première semaine d'observation) 
+#*** SÃ©rie chronologique de frequence hebdomadaire (weekly) ***
+# CrÃ©ation du dÃ©but des dates (il s'agit de notre premiÃ¨re semaine d'observation) 
 # frequence weekly
 inds <- seq(as.Date("2020-03-02"), as.Date("2020-07-14"), by = "week")
-# début des date
+# dÃ©but des date
 begin <- as.numeric(format(inds[1], "%W"))
 
-# séries chronologiques
+# sÃ©ries chronologiques
 ts_covid19 <- ts(covid19_SN[ ,3], start = begin, frequency = 7)
 head(force(ts_covid19), 10)
 
@@ -312,41 +312,41 @@ head(force(ts_covid19), 10)
 #---------- Visualisation du chronogramme
 # Avec 'autoplot()'
 g <- autoplot(ts_covid19, col = "blue") +
-  ggtitle("COVID-19 : Nombre de cas confirmés au Sénégal\n du 02 Mars au 28 Juin 2020") +
+  ggtitle("COVID-19 : Nombre de cas confirmÃ©s au SÃ©nÃ©gal\n du 02 Mars au 28 Juin 2020") +
   xlab("Semaines") +
-  ylab("Nbre de cas confirmés") +
+  ylab("Nbre de cas confirmÃ©s") +
   theme_minimal()
 # Visulisation Graphique interractif
 ggplotly(g)
 
 
-#--------------- Appliquons les trois premières méthodes de prévision ------------
-#-------------------------- sur nos données hebdomadaires -----------------------
+#--------------- Appliquons les trois premiÃ¨res mÃ©thodes de prÃ©vision ------------
+#-------------------------- sur nos donnÃ©es hebdomadaires -----------------------
 
-# Données d'entrainement de la 11e semaine à la 25e semaine 
-# (On a éliminer les valuers nulles de la série)
+# DonnÃ©es d'entrainement de la 11e semaine Ã  la 25e semaine 
+# (On a Ã©liminer les valuers nulles de la sÃ©rie)
 ts_covid2 <- window(ts_covid19, start = c(11, 1), end = c(25, 1))
-# Apperçu de la nouvelle séries
+# ApperÃ§u de la nouvelle sÃ©ries
 head(ts_covid2)
 
-# Visualisation des méthodes de prévision
+# Visualisation des mÃ©thodes de prÃ©vision
 autoplot(ts_covid2) +
   autolayer(meanf(ts_covid2, h=14),
             series="Mean", PI=FALSE) +
   autolayer(naive(ts_covid2, h=14),
-            series="Naïve", PI=FALSE) +
+            series="NaÃ¯ve", PI=FALSE) +
   autolayer(snaive(ts_covid2, h=14),
-            series="Seasonal naïve", PI=FALSE) +
-  ggtitle("Les méthodes de prévision de référence") +
-  xlab("semaines") + ylab("Nbre de cas confirmés") +
-  guides(colour=guide_legend(title="Prévision :")) +
+            series="Seasonal naÃ¯ve", PI=FALSE) +
+  ggtitle("Les mÃ©thodes de prÃ©vision de rÃ©fÃ©rence") +
+  xlab("semaines") + ylab("Nbre de cas confirmÃ©s") +
+  guides(colour=guide_legend(title="PrÃ©vision :")) +
   theme_minimal() +
   theme(legend.position = "bottom")
 
 
 
 
-#------------------------------- Transformations et ajustements des données ---------------------------
+#------------------------------- Transformations et ajustements des donnÃ©es ---------------------------
 
 #---------------------------------------- Transformation Box-Cox -------------------------------------
 
@@ -355,26 +355,26 @@ ts_covid19 <- window(ts_covid19, start = c(11, 1))
 (lambda <- BoxCox.lambda(ts_covid19))
 #> [1] 0.2424546
 
-# Visualisation du chronogramme des données ajustées
+# Visualisation du chronogramme des donnÃ©es ajustÃ©es
 autoplot(BoxCox(ts_covid19, lambda)) +
   xlab("") +
   ylab("") +
-  ggtitle("Données ajustées selon la transformation Box-Cox\n de paramètre lambda") +
+  ggtitle("DonnÃ©es ajustÃ©es selon la transformation Box-Cox\n de paramÃ¨tre lambda") +
   theme_minimal()
 
-# Visualisons la série ajustée et la série non ajustée
-# Regroupons les deux séries sur un même graphe
+# Visualisons la sÃ©rie ajustÃ©e et la sÃ©rie non ajustÃ©e
+# Regroupons les deux sÃ©ries sur un mÃªme graphe
 ts_combined <- cbind(ajusted_ts = BoxCox(ts_covid19, lambda), 
                      no_ajusted_ts = ts_covid19)
 
-# Vérifions la classe de l'objet créé
+# VÃ©rifions la classe de l'objet crÃ©Ã©
 class(ts_combined) # calss : 'ts' 
 
-# Les chronogrammes des deux séries
+# Les chronogrammes des deux sÃ©ries
 autoplot(ts_combined[, 1:2], facets = T) +
   xlab("semaines") +
-  ylab("Nbre de cas confirmés") +
-  ggtitle("Série chronologique ajustée (en haut) et \n série chronologique non ajustée (en bas)") +
+  ylab("Nbre de cas confirmÃ©s") +
+  ggtitle("SÃ©rie chronologique ajustÃ©e (en haut) et \n sÃ©rie chronologique non ajustÃ©e (en bas)") +
   theme_minimal()
 
 
@@ -382,40 +382,40 @@ autoplot(ts_combined[, 1:2], facets = T) +
 
 #--------------------------------- Transformation avec ajustement du biais ----------------------------
 
-# Données Ajustées en fonction du biais 
-# avec la méthode saisonnière naive
+# DonnÃ©es AjustÃ©es en fonction du biais 
+# avec la mÃ©thode saisonniÃ¨re naive
 fc <- snaive(ts_covid2, lambda=0, h=14, level=80) # ajustement simple
 fc2 <- snaive(ts_covid2, lambda=0, h=14, level=80, # ajustement en fonction du biais
               biasadj=TRUE)
 
-# Comparaison des prévisions entre les données ajustées simplement
-# et celles ajustées en fonction du biais.
+# Comparaison des prÃ©visions entre les donnÃ©es ajustÃ©es simplement
+# et celles ajustÃ©es en fonction du biais.
 autoplot(ts_covid2) +
-  autolayer(fc, series="Simple  rétrotransformation") +
-  autolayer(fc2, series="Biais adjusté", PI=FALSE) +
+  autolayer(fc, series="Simple  rÃ©trotransformation") +
+  autolayer(fc2, series="Biais adjustÃ©", PI=FALSE) +
   xlab("") +
   ylab("") +
-  ggtitle("Prévisions des données ajustées simplement \n et celles ajustées en fonction du biais") +
-  guides(colour=guide_legend(title="Prévision")) +
+  ggtitle("PrÃ©visions des donnÃ©es ajustÃ©es simplement \n et celles ajustÃ©es en fonction du biais") +
+  guides(colour=guide_legend(title="PrÃ©vision")) +
   theme_minimal() +
   theme(legend.position = "bottom")
 
 
 
 
-#------------------------------------- Diagnostics résiduels ---------------------------------
+#------------------------------------- Diagnostics rÃ©siduels ---------------------------------
 
-# La commande suivante permet de générer plusieurs diagrammes :
-# 1. Le diagramme temporel des résidus
-# 2. L'Histogramme des résidus 
-# 3. Le diagramme d'Autocorrélation (ACF) des résidus
-checkresiduals(fc2) + # résidu de la méthode saisonnière naive
+# La commande suivante permet de gÃ©nÃ©rer plusieurs diagrammes :
+# 1. Le diagramme temporel des rÃ©sidus
+# 2. L'Histogramme des rÃ©sidus 
+# 3. Le diagramme d'AutocorrÃ©lation (ACF) des rÃ©sidus
+checkresiduals(fc2) + # rÃ©sidu de la mÃ©thode saisonniÃ¨re naive
   theme_minimal()     # avec ajustement du biais
 
 
-#---------------------------------- Tests de Portmanteau pour l'autocorrélation -------------------------
+#---------------------------------- Tests de Portmanteau pour l'autocorrÃ©lation -------------------------
 #------------------------------- Voir l'article 'SNCovi19' pour plus d'explication ----------------------
-# Résidus
+# RÃ©sidus
 res <- residuals(fc2)
 #---------- Test de Box-Pierce
 # lag=h and fitdf=K
@@ -439,34 +439,34 @@ Box.test(res,lag=14, fitdf=0, type="Lj")
 
 
 
-#----------------------------------- Évaluation de l'exactitude des prévisions --------------------------
+#----------------------------------- Ã‰valuation de l'exactitude des prÃ©visions --------------------------
 
-#--------- Découpage des données en données d'Entrainement ('train') et
-#---------------------------------- Données de Test
+#--------- DÃ©coupage des donnÃ©es en donnÃ©es d'Entrainement ('train') et
+#---------------------------------- DonnÃ©es de Test
 
 # Etalage du nombre de semaines
 # etendu = 28.1 - 11 = 17.1
 # 70% * etendu = 17.1 * 0.8 = 16.68 
-# Donc, nos données de 'train' irrons jusqu'à 
+# Donc, nos donnÃ©es de 'train' irrons jusqu'Ã  
 # debut = 11 + 70% * etendu = 26e semaine, 1e jour.
 tsTrain <- window(ts_covid19, end = c(26, 1))   
 tsTest <- window(ts_covid19, start = c(27, 1)) 
 
-# Création des modèles de référence
+# CrÃ©ation des modÃ¨les de rÃ©fÃ©rence
 # A partir du jeux d'entrainement "tsTrain"
 ts_covidFit1 <- meanf(tsTrain, h = 14)
 ts_covidFit2 <- rwf(tsTrain, h = 14)
 ts_covidFit3 <- snaive(tsTrain, h = 14)
 
 
-# Visualisation de la prévision
+# Visualisation de la prÃ©vision
 autoplot(ts_covid19) +
   autolayer(ts_covidFit1, series="Mean", PI=FALSE) +
-  autolayer(ts_covidFit2, series="Naïve", PI=FALSE) +
-  autolayer(ts_covidFit3, series="Seasonal naïve", PI=FALSE) +
-  xlab("semaines") + ylab("Nbre de cas confirmés") +
-  ggtitle("Prévision de nombre de cas confirmés du Covid19 \n en utilisant les données hebdomadaires") +
-  guides(colour=guide_legend(title="Prévision")) +
+  autolayer(ts_covidFit2, series="NaÃ¯ve", PI=FALSE) +
+  autolayer(ts_covidFit3, series="Seasonal naÃ¯ve", PI=FALSE) +
+  xlab("semaines") + ylab("Nbre de cas confirmÃ©s") +
+  ggtitle("PrÃ©vision de nombre de cas confirmÃ©s du Covid19 \n en utilisant les donnÃ©es hebdomadaires") +
+  guides(colour=guide_legend(title="PrÃ©vision")) +
   theme_minimal() +
   theme(legend.position = "bottom")
 
@@ -474,15 +474,15 @@ autoplot(ts_covid19) +
 
 
 
-#----------------------------------- Evaluation de l'exactitude des prévisions -----------------------------
-accuracy(ts_covidFit1, tsTest)    # Evaluation méthode moyenne
-accuracy(ts_covidFit2, tsTest)    # Evaluation méthode naive
-accuracy(ts_covidFit3, tsTest)    # Evaluation méthode naive saisonnière
+#----------------------------------- Evaluation de l'exactitude des prÃ©visions -----------------------------
+accuracy(ts_covidFit1, tsTest)    # Evaluation mÃ©thode moyenne
+accuracy(ts_covidFit2, tsTest)    # Evaluation mÃ©thode naive
+accuracy(ts_covidFit3, tsTest)    # Evaluation mÃ©thode naive saisonniÃ¨re
 
 
 
-#-------------------------------------- Intervalle de prédiction ------------------------------------------
-# Pour voir les intervalles de prédiction
+#-------------------------------------- Intervalle de prÃ©diction ------------------------------------------
+# Pour voir les intervalles de prÃ©diction
 # Il suffit de faire la cmd suivante
 print(fc)
 print(fc2)
